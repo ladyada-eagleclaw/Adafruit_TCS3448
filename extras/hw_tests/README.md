@@ -7,6 +7,12 @@ These sketches target the attached Metro Mini fixture:
 - Active-high UVA LED control to D4.
 - 16-pixel NeoPixel ring data to D6.
 
+For `05_rgb_uva`, aim the NeoPixel ring and TCS3448 at the same diffuse white
+target so the colored light reflects back into the sensor. Wiring the ring
+without an optical return path will correctly fail the wavelength-response
+check. The test automatically repeats a saturated emitter measurement at lower
+gain.
+
 Run the numbered sketches in order. Every automated test prints `ALL TESTS
 PASSED` only after restoring its outputs to a safe state.
 
