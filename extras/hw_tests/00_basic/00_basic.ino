@@ -1,5 +1,7 @@
 #include <Adafruit_TCS3448.h>
 
+#define I2C_READ_ATTEMPTS 2
+
 Adafruit_TCS3448 tcs;
 bool initialized = false;
 
@@ -65,30 +67,61 @@ bool takeMeasurement(tcs3448_data_t *data) {
   uint32_t start = millis();
   bool ready = false;
   while (millis() - start < 2000) {
-    if (!tcs.getDataReady(&ready)) {
+    if (!getDataReadyWithRetry(&ready)) {
+      if (!tcs.stopMeasurement()) {
+        Serial.println(F("INFO: Measurement cleanup also failed"));
+      }
       return false;
     }
     if (ready) {
-      bool readSucceeded = tcs.readData(data);
-      tcs.stopMeasurement();
-      return readSucceeded;
+      bool readSucceeded = readDataWithRetry(data);
+      bool stopSucceeded = tcs.stopMeasurement();
+      return readSucceeded && stopSucceeded;
     }
     delay(1);
   }
-  tcs.stopMeasurement();
+  if (!tcs.stopMeasurement()) {
+    Serial.println(F("INFO: Measurement cleanup also failed"));
+  }
   return false;
 }
 
 bool clearPendingResult() {
   bool ready = false;
-  if (!tcs.getDataReady(&ready)) {
+  if (!getDataReadyWithRetry(&ready)) {
     return false;
   }
   if (ready) {
     tcs3448_data_t discarded;
-    return tcs.readData(&discarded);
+    return readDataWithRetry(&discarded);
   }
   return true;
+}
+
+bool getDataReadyWithRetry(bool *ready) {
+  for (uint8_t attempt = 0; attempt < I2C_READ_ATTEMPTS; attempt++) {
+    if (tcs.getDataReady(ready)) {
+      if (attempt > 0) {
+        Serial.println(F("INFO: Recovered one transient status-read failure"));
+      }
+      return true;
+    }
+    delay(2);
+  }
+  return false;
+}
+
+bool readDataWithRetry(tcs3448_data_t *data) {
+  for (uint8_t attempt = 0; attempt < I2C_READ_ATTEMPTS; attempt++) {
+    if (tcs.readData(data)) {
+      if (attempt > 0) {
+        Serial.println(F("INFO: Recovered one transient data-read failure"));
+      }
+      return true;
+    }
+    delay(2);
+  }
+  return false;
 }
 
 void failAndHalt(const __FlashStringHelper *message) {
