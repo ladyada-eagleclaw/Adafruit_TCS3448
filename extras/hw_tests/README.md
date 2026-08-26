@@ -28,6 +28,7 @@ PASSED` only after restoring its outputs to a safe state.
 | `13_autozero` | Auto-zero code readback, unsaturated frames, and timing report |
 | `14_flicker` | Generated and detected 100 Hz and 120 Hz visible flicker |
 | `15_long_duration` | Thirty seconds of continuous coherent reads at 400 kHz |
+| `16_onboard_led` | LED current, enable/disable, and measured off-on-off optical response |
 
 `01_cold_start` deliberately does not count resets in EEPROM. Opening Serial on
 a Metro Mini resets the MCU without removing sensor power, so an automated boot

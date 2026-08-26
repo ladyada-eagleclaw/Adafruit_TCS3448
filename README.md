@@ -12,7 +12,8 @@ The public API and core coherent-read implementation are under review. Numbered
 hardware tests cover initialization, both GPIO directions, RGB/UVA response,
 SMUX modes, gain, integration time, saturation, interrupts, persistence,
 power/wait operation, auto-zero, 100/120 Hz flicker, I2C speed, and continuous
-stability.
+stability. The onboard white LED has a visible blink example and a focused
+off-on-off optical hardware test.
 
 Adafruit invests time and resources providing this open source code. Please
 support Adafruit and open-source hardware by purchasing products from Adafruit!
