@@ -209,11 +209,18 @@ class Adafruit_TCS3448 : public Adafruit_AS7343 {
   using Adafruit_AS7343::getFlickerStatus;
   using Adafruit_AS7343::getGPIOValue;
 
-  /** Prevent copying an object that owns an I2C device. */
-  Adafruit_TCS3448(const Adafruit_TCS3448&) = delete;
+  /**
+   * @brief Prevent copying an object that owns an I2C device.
+   * @param other Instance that must not be copied.
+   */
+  Adafruit_TCS3448(const Adafruit_TCS3448& other) = delete;
 
-  /** Prevent assigning an object that owns an I2C device. */
-  Adafruit_TCS3448& operator=(const Adafruit_TCS3448&) = delete;
+  /**
+   * @brief Prevent assigning an object that owns an I2C device.
+   * @param other Instance that must not be assigned.
+   * @return Not callable; this operator is deleted.
+   */
+  Adafruit_TCS3448& operator=(const Adafruit_TCS3448& other) = delete;
 
   /**
    * @brief Initialize the TCS3448 at its fixed I2C address.
